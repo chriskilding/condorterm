@@ -1,22 +1,23 @@
-use iocraft::prelude::*;
+use crate::components::instruments::accelerometer::Accelerometer;
+use crate::components::instruments::airspeed::AirSpeedIndicator;
+use crate::components::instruments::altimeter::Altimeter;
 use crate::components::instruments::clock::Clock;
 use crate::components::instruments::compass::Compass;
-use crate::components::instruments::vario::Vario;
-use crate::components::instruments::accelerometer::Accelerometer;
-use crate::components::instruments::altimeter::Altimeter;
-use crate::components::instruments::airspeed::AirSpeedIndicator;
 use crate::components::instruments::slip::TurnSlipIndicator;
-
+use crate::components::instruments::vario::Vario;
+use iocraft::prelude::*;
 
 #[derive(Default, Props)]
 pub struct InstrumentPanelProps {
     pub host: String,
-    pub port: String
+    pub port: String,
 }
 
-
 #[component]
-pub fn InstrumentPanel(mut hooks: Hooks, props: &InstrumentPanelProps) -> impl Into<AnyElement<'static>> {
+pub fn InstrumentPanel(
+    mut hooks: Hooks,
+    props: &InstrumentPanelProps,
+) -> impl Into<AnyElement<'static>> {
     let mut system = hooks.use_context_mut::<SystemContext>();
     let mut should_exit = hooks.use_state(|| false);
 

@@ -18,3 +18,9 @@ jobs:
       run: cargo build --verbose
     - name: Test
       run: cargo test --verbose
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Format
+      run: cargo fmt --check
