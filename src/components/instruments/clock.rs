@@ -1,6 +1,6 @@
 use iocraft::prelude::*;
-use crate::components::instruments::style::{BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE};
-use crate::components::instruments::label::Label;
+use crate::components::instruments::shared::style::{BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE};
+use crate::components::instruments::shared::label::Label;
 
 #[derive(Default, Props)]
 pub struct ClockProps {

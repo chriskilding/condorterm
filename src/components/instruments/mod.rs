@@ -1,5 +1,4 @@
-pub mod style;
-pub mod label;
+pub mod shared;
 pub mod clock;
 pub mod compass;
 pub mod vario;

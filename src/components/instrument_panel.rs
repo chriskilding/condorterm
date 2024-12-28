@@ -5,7 +5,7 @@ use crate::components::instruments::vario::Vario;
 use crate::components::instruments::accelerometer::Accelerometer;
 use crate::components::instruments::altimeter::Altimeter;
 use crate::components::instruments::airspeed::AirSpeedIndicator;
-use crate::components::instruments::slip::SlipIndicator;
+use crate::components::instruments::slip::TurnSlipIndicator;
 
 
 #[derive(Default, Props)]
@@ -64,7 +64,7 @@ pub fn InstrumentPanel(mut hooks: Hooks, props: &InstrumentPanelProps) -> impl I
                 }
                 Box(gap: Gap::Length(2)) {
                     Compass(value: 241, units: "deg")
-                    SlipIndicator()
+                    TurnSlipIndicator(value: 0.0)
                     Accelerometer(value: 1.5, units: "G")
                 }
                 Box(gap: Gap::Length(2), justify_content: JustifyContent::Center) {
