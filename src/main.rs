@@ -1,5 +1,5 @@
-use iocraft::prelude::*;
 use clap::Parser;
+use iocraft::prelude::*;
 mod components;
 
 #[derive(Parser, Debug)]
@@ -10,15 +10,14 @@ struct Program {
 
     /// Condor UDP port
     #[arg(short, long, default_value_t = 55278)]
-    port: i32
+    port: i32,
 }
-
-
 
 fn main() {
     let Program { host, port } = Program::parse();
 
-    let mut instrument_panel = element!(components::instrument_panel::InstrumentPanel(host, port: format!("{}", port)));
+    let mut instrument_panel =
+        element!(components::instrument_panel::InstrumentPanel(host, port: format!("{}", port)));
 
     smol::block_on(instrument_panel.fullscreen()).unwrap();
 }

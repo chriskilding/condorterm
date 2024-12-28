@@ -1,10 +1,12 @@
-use iocraft::prelude::*;
-use crate::components::instruments::shared::style::{BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE};
 use crate::components::instruments::shared::label::Label;
+use crate::components::instruments::shared::style::{
+    BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE,
+};
+use iocraft::prelude::*;
 
 #[derive(Default, Props)]
 pub struct ClockProps {
-    pub timezone: String
+    pub timezone: String,
 }
 
 #[component]
