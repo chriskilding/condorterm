@@ -6,7 +6,7 @@ use iocraft::prelude::*;
 
 #[derive(Default, Props)]
 pub struct TurnSlipIndicatorProps {
-    pub value: f32,
+    pub value: Option<State<f32>>,
 }
 
 #[component]
@@ -18,7 +18,7 @@ pub fn TurnSlipIndicator(props: &TurnSlipIndicatorProps) -> impl Into<AnyElement
                 Box(background_color: Color::Grey, height: 1, justify_content: JustifyContent::Center) {
                     Box(background_color: Color::DarkGrey, width: 1, border_style: BorderStyle::None)
                 }
-                Text(content: format!("{}", props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
+                Text(content: format!("{:+.2}", props.value.map_or(0.0, |x| x.get())), wrap: TextWrap::NoWrap, align: TextAlign::Center)
                 Text(content: "rad", wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
             }
         }

@@ -21,22 +21,21 @@ You can install `condorterm` from source like this:
 cargo install
 ```
 
-You can alternatively run `cargo build` and move the executables from the `target` directory to a place of your choice.
+Alternatively, you can run `cargo build`, then move the executables from the `target` directory to a place of your choice.
 
 ## Usage
 
-Enable UDP data transmission within Condor's configuration (`UDP.ini` and `Simkits.ini`).
-
-TODO Socat / Condor bridge if needed:
-
-```shell
-socat ...
-```
-
-Run Condor and start a new flight.
-
-Then open `condorterm` and point it at Condor's UDP socket:
+Run `condorterm` and have it listen on an agreed UDP socket:
 
 ```shell
 condorterm <host> -p [port]
 ```
+
+Within Condor's configuration files (`UDP.ini` and `Simkits.ini`):
+- Enable Condor UDP output.
+- Set the Condor UDP host and port properties to the ones you used for `condorterm`.
+
+Start Condor (or restart Condor if it was already running).
+
+Finally, start a new flight.
+

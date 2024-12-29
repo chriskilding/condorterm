@@ -6,7 +6,7 @@ use iocraft::prelude::*;
 
 #[derive(Default, Props)]
 pub struct VarioProps {
-    pub value: f32,
+    pub value: Option<State<f32>>,
     pub units: String,
 }
 
@@ -21,7 +21,7 @@ pub fn Vario(props: &VarioProps) -> impl Into<AnyElement<'static>> {
                     Box(width: 3, border_style: BorderStyle::None, background_color: Color::Green) {}
                     Box(width: 1, border_style: BorderStyle::None, background_color: Color::DarkGreen) {}
                 }
-                Text(content: format!("+{}", props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
+                Text(content: format!("{:+.1}", props.value.map_or(0.0, |x| x.get())), wrap: TextWrap::NoWrap, align: TextAlign::Center)
                 Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
             }
         }

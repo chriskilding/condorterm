@@ -1,4 +1,5 @@
 use crate::components::instruments::shared::label::Label;
+use crate::components::instruments::shared::string::s;
 use crate::components::instruments::shared::style::{
     BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE,
 };
@@ -6,7 +7,7 @@ use iocraft::prelude::*;
 
 #[derive(Default, Props)]
 pub struct AirSpeedIndicatorProps {
-    pub value: i32,
+    pub value: Option<State<u32>>,
     pub units: String,
 }
 
@@ -21,7 +22,7 @@ pub fn AirSpeedIndicator(props: &AirSpeedIndicatorProps) -> impl Into<AnyElement
                     Box(width: 2, border_style: BorderStyle::None, background_color: Color::Yellow) {}
                     Box(width: 1, border_style: BorderStyle::None, background_color: Color::DarkYellow) {}
                 }
-                Text(content: format!("{}", props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
+                Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
                 Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
             }
         }
