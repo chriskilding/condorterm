@@ -21,7 +21,7 @@ pub fn Altimeter(props: &AltimeterProps) -> impl Into<AnyElement<'static>> {
                     Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Right, color: Color::Black)
                     Box(width: 1)
                 }
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
                 Box(height: 1)
                 Box(justify_content: JustifyContent::End, height: 1) {
                     Text(content: inop_text(props.inop), color: props.style.inop_color)

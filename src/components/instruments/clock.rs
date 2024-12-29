@@ -22,7 +22,7 @@ pub fn Clock(props: &ClockProps) -> impl Into<AnyElement<'static>> {
                         Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::Black)
                     }
                 }
-                Text(content: format!("{}", props.timezone), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.timezone), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
                 Box(height: 1)
             }
         }

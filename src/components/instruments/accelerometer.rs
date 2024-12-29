@@ -48,7 +48,7 @@ pub fn Accelerometer(props: &AccelerometerProps) -> impl Into<AnyElement<'static
                     Box(width: 2, background_color: bar_color(props.value, &props.scale))
                 }
                 Text(content: format!("{:+.1}", props.value.map_or(0.0, |x| x.get())), wrap: TextWrap::NoWrap, align: TextAlign::Center)
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
                 Box(justify_content: JustifyContent::End, height: 1) {
                     Text(content: inop_text(props.inop), color: props.style.inop_color)
                 }

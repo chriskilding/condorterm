@@ -23,7 +23,7 @@ pub fn Compass(props: &CompassProps) -> impl Into<AnyElement<'static>> {
                     }
                 }
                 Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
             }
         }
     }

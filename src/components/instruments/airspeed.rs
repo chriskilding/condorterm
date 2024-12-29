@@ -56,7 +56,7 @@ pub fn AirSpeedIndicator(props: &AirSpeedIndicatorProps) -> impl Into<AnyElement
                     Box(width: bar_width(&props.scale, props.value), background_color: bar_color(&props.scale, props.value))
                 }
                 Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
             }
         }
     }
