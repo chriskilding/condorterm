@@ -1,13 +1,13 @@
 use std::time::Duration;
 
-use crate::components::instruments::airspeed::AirSpeedIndicator;
+use crate::components::instruments::accelerometer;
+use crate::components::instruments::airspeed;
 use crate::components::instruments::altimeter::Altimeter;
 use crate::components::instruments::clock::Clock;
 use crate::components::instruments::compass::Compass;
 use crate::components::instruments::slip::TurnSlipIndicator;
-use crate::components::instruments::vario::Vario;
-use crate::data::client::Datagram;
-use crate::{components::instruments::accelerometer::Accelerometer, data::client::to_time};
+use crate::components::instruments::vario;
+use crate::data::client::{to_time, Datagram};
 use chrono::NaiveTime;
 use iocraft::prelude::*;
 use smol::Timer;
@@ -97,14 +97,14 @@ pub fn InstrumentPanel(
             }
             Box(flex_direction: FlexDirection::Column, gap: Gap::Length(1), padding: 1) {
                 Box(gap: Gap::Length(2)) {
-                    Vario(value: vario, units: "kt")
-                    AirSpeedIndicator(value: airspeed, units: "kt")
+                    vario::Vario(value: vario, units: "kt", scale: 12 as u32, inop: true)
+                    airspeed::AirSpeedIndicator(value: airspeed, units: "kt", scale: airspeed::Scale::create(84, 119, 125).unwrap())
                     Altimeter(value: altitude, units: "ft")
                 }
                 Box(gap: Gap::Length(2)) {
                     Compass(value: compass, units: "deg")
                     TurnSlipIndicator(value: slip)
-                    Accelerometer(value: g_force, units: "G")
+                    accelerometer::Accelerometer(value: g_force, units: "G", scale: accelerometer::Scale::create(-4.0, 1.0, 6.5).unwrap(), inop: true)
                 }
                 Box(gap: Gap::Length(2), justify_content: JustifyContent::Center) {
                     Clock(value: time, timezone: "UTC")
