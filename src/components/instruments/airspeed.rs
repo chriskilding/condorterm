@@ -1,8 +1,6 @@
 use crate::components::instruments::shared::label::Label;
 use crate::components::instruments::shared::string::s;
-use crate::components::instruments::shared::style::{
-    BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE,
-};
+use crate::components::instruments::shared::style::{Style, BOX_WIDTH};
 use iocraft::prelude::*;
 
 #[derive(Default)]
@@ -45,6 +43,7 @@ pub struct AirSpeedIndicatorProps {
     pub value: Option<State<u32>>,
     pub units: String,
     pub scale: Scale,
+    pub style: Style,
 }
 
 #[component]
@@ -52,12 +51,12 @@ pub fn AirSpeedIndicator(props: &AirSpeedIndicatorProps) -> impl Into<AnyElement
     element! {
         Box(flex_direction: FlexDirection::Column) {
             Label(content: "Airspeed")
-            Box(border_color: INSTRUMENT_BORDER_COLOR, border_style: INSTRUMENT_BORDER_STYLE, flex_direction: FlexDirection::Column, width: BOX_WIDTH, padding: 1) {
+            Box(border_color: props.style.border_color, border_style: props.style.border_style, flex_direction: FlexDirection::Column, width: BOX_WIDTH, padding: 1) {
                 Box(background_color: Color::Grey, height: 1) {
-                    Box(width: bar_width(&props.scale, props.value), border_style: BorderStyle::None, background_color: bar_color(&props.scale, props.value))
+                    Box(width: bar_width(&props.scale, props.value), background_color: bar_color(&props.scale, props.value))
                 }
                 Text(content: s(props.value), wrap: TextWrap::NoWrap, align: TextAlign::Center)
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
             }
         }
     }

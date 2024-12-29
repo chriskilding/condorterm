@@ -1,7 +1,5 @@
 use crate::components::instruments::shared::label::Label;
-use crate::components::instruments::shared::style::{
-    BOX_WIDTH, INSTRUMENT_BORDER_COLOR, INSTRUMENT_BORDER_STYLE,
-};
+use crate::components::instruments::shared::style::{Style, BOX_WIDTH};
 use iocraft::prelude::*;
 
 #[derive(Default, Props)]
@@ -11,6 +9,7 @@ pub struct VarioProps {
     /// The vario's range, from +<scale> knots to -<scale> knots
     pub scale: u32,
     pub inop: bool,
+    pub style: Style,
 }
 
 #[component]
@@ -20,13 +19,13 @@ pub fn Vario(props: &VarioProps) -> impl Into<AnyElement<'static>> {
     element! {
         Box(flex_direction: FlexDirection::Column) {
             Label(content: "Vario")
-            Box(border_color: INSTRUMENT_BORDER_COLOR, border_style: INSTRUMENT_BORDER_STYLE, flex_direction: FlexDirection::Column, width: BOX_WIDTH, padding_top: 1, padding_left: 1, padding_right: 1) {
+            Box(border_color: props.style.border_color, border_style: props.style.border_style, flex_direction: FlexDirection::Column, width: BOX_WIDTH, padding_top: 1, padding_left: 1, padding_right: 1) {
                 Box(background_color: Color::Grey, height: 1) {
-                    Box(width: widths.left_padding, border_style: BorderStyle::None)
-                    Box(width: widths.main, border_style: BorderStyle::None, background_color: Color::DarkGrey)
+                    Box(width: widths.left_padding)
+                    Box(width: widths.main, background_color: Color::DarkGrey)
                 }
                 Text(content: format!("{:+.1}", props.value.map_or(0.0, |x| x.get())), wrap: TextWrap::NoWrap, align: TextAlign::Center)
-                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: Color::DarkGrey)
+                Text(content: format!("{}", props.units), wrap: TextWrap::NoWrap, align: TextAlign::Center, color: props.style.units_color)
                 Box(justify_content: JustifyContent::End, height: 1) {
                     Text(content: inop_text(props.inop), color: Color::DarkRed)
                 }
