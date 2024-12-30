@@ -1,10 +1,12 @@
 # condorterm
 
-Terminal UI (TUI) for the Condor soaring simulator.
+Terminal UI (TUI) for the [Condor](https://www.condorsoaring.com) soaring simulator.
+
+**Warning:** This is a **work in progress**. It currently uses a random data feed, as the UDP backend is not functional yet.
 
 ## Overview
 
-`condorterm` displays the UDP output from Condor as a set of virtual steam gauges within your terminal.
+`condorterm` displays Condor's UDP output in your terminal, as a set of virtual steam gauges.
 
 This may be helpful in the following scenarios:
 
@@ -15,17 +17,15 @@ You can also use it while **flying** in Condor, to display an aircraft's instrum
 
 ## Setup
 
-You can install `condorterm` from source like this:
+Install `condorterm` from source:
 
 ```shell
 cargo install
 ```
 
-Alternatively, you can run `cargo build`, then move the executables from the `target` directory to a place of your choice.
-
 ## Usage
 
-Run `condorterm` and have it listen on an agreed UDP socket:
+Run `condorterm` and make it listen on a UDP socket:
 
 ```shell
 condorterm <host> -p [port]
