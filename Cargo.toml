@@ -13,3 +13,6 @@ clap = { version = "4.5.23", features = ["derive"] }
 clap_derive = { version = "4.0.0-rc.1" }
 rand = "0.8.5"
 chrono = "0.4.39"
+
+[dev-dependencies]
+approx = "0.5.1"
