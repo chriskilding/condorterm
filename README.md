@@ -2,7 +2,7 @@
 
 Terminal UI (TUI) for the [Condor](https://www.condorsoaring.com) soaring simulator.
 
-**Warning:** This is a **work in progress**. It currently uses a random data feed, as the UDP backend is not functional yet.
+**Warning:** This is a **work in progress**. Some features are not fully functional yet.
 
 ## Overview
 
