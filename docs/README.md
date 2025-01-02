@@ -4,6 +4,8 @@ Terminal UI (TUI) for the [Condor](https://www.condorsoaring.com) soaring simula
 
 **Warning:** This is a **work in progress**. Some features are not fully functional yet.
 
+![Screenshot](images/screenshot.png)
+
 ## Overview
 
 `condorterm` displays Condor's UDP output in your terminal, as a set of virtual steam gauges.
