@@ -1,37 +1,39 @@
+use async_trait::async_trait;
 use core::str;
-use std::net::{IpAddr, SocketAddr, UdpSocket};
+use smol::net::UdpSocket;
 
 use super::client::{Backend, Datagram};
 
 /// Condor UDP backend implementation
-#[derive(Default, Copy, Clone, Debug)]
+#[derive(Debug, Default)]
 pub struct UdpBackend {
-    port: u16,
+    socket: Option<UdpSocket>,
 }
 
 impl UdpBackend {
-    pub fn create(_host: IpAddr, port: u16) -> Self {
-        Self { port }
+    pub fn new(socket: UdpSocket) -> Self {
+        return Self {
+            socket: Some(socket),
+        };
     }
 }
 
+#[async_trait]
 impl Backend for UdpBackend {
     /// Read the latest Condor UDP input
-    fn receive(&self) -> Datagram {
-        let address = SocketAddr::from(([127, 0, 0, 1], self.port));
-
-        if let Ok(socket) = UdpSocket::bind(address) {
+    async fn receive(&self) -> Datagram {
+        if let Some(socket) = &self.socket {
             let mut buffer = [0; 1024];
 
-            let _ = socket.recv(&mut buffer);
-
-            // Convert the binary buffer to string
-            match str::from_utf8(&buffer) {
-                Ok(s) => {
-                    // Parse the message
-                    return parse(s);
+            if let Ok(..) = socket.recv(&mut buffer).await {
+                // Convert the binary buffer to string
+                match str::from_utf8(&buffer) {
+                    Ok(s) => {
+                        // Parse the message
+                        return parse(s);
+                    }
+                    Err(_) => {}
                 }
-                Err(_) => {}
             }
         }
 
@@ -43,25 +45,25 @@ impl Backend for UdpBackend {
 fn update(datagram: &mut Datagram, key: &str, value: f32) {
     match key {
         "airspeed" => {
-            datagram.airspeed = value;
+            datagram.airspeed = Some(value);
         }
         "altitude" => {
-            datagram.altitude = value;
+            datagram.altitude = Some(value);
         }
         "compass" => {
-            datagram.compass = value;
+            datagram.compass = Some(value);
         }
         "gforce" => {
-            datagram.gforce = value;
+            datagram.gforce = Some(value);
         }
         "slipball" => {
-            datagram.slipball = value;
+            datagram.slipball = Some(value);
         }
         "time" => {
-            datagram.time = value;
+            datagram.time = Some(value);
         }
         "vario" => {
-            datagram.vario = value;
+            datagram.vario = Some(value);
         }
         _ => {
             // do nothing
@@ -87,15 +89,6 @@ fn parse(s: &str) -> Datagram {
     datagram
 }
 
-fn create_socket(host: &IpAddr, port: u16) -> core::result::Result<UdpSocket, String> {
-    let address = SocketAddr::new(*host, port);
-
-    match UdpSocket::bind(address) {
-        Ok(socket) => Ok(socket),
-        Err(_) => Err("unable to listen on UDP socket".into()),
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -104,49 +97,49 @@ mod tests {
     fn should_parse_airspeed() {
         let msg = "airspeed=58.0";
         let result = parse(msg);
-        assert_eq!(result.airspeed as u32, 58);
+        assert_eq!(result.airspeed.unwrap() as u32, 58);
     }
 
     #[test]
     fn should_parse_time() {
         let msg = "time=12.001";
         let result = parse(msg);
-        assert_eq!(result.time as u32, 12);
+        assert_eq!(result.time.unwrap() as u32, 12);
     }
 
     #[test]
     fn should_parse_altitude() {
         let msg = "altitude=810.002";
         let result = parse(msg);
-        assert_eq!(result.altitude as u32, 810);
+        assert_eq!(result.altitude.unwrap() as u32, 810);
     }
 
     #[test]
     fn should_parse_vario() {
         let msg = "vario=2.01";
         let result = parse(msg);
-        assert_eq!(result.vario as u32, 2);
+        assert_eq!(result.vario.unwrap() as u32, 2);
     }
 
     #[test]
     fn should_parse_compass() {
         let msg = "compass=79.0";
         let result = parse(msg);
-        assert_eq!(result.compass as u32, 79);
+        assert_eq!(result.compass.unwrap() as u32, 79);
     }
 
     #[test]
     fn should_parse_slipball() {
         let msg = "slipball=0.001";
         let result = parse(msg);
-        assert_eq!(result.slipball as u32, 0);
+        assert_eq!(result.slipball.unwrap() as u32, 0);
     }
 
     #[test]
     fn should_parse_gforce() {
         let msg = "gforce=1.0002";
         let result = parse(msg);
-        assert_eq!(result.gforce as u32, 1);
+        assert_eq!(result.gforce.unwrap() as u32, 1);
     }
 
     #[test]
@@ -156,7 +149,7 @@ airspeed=58.0
 airspeed=65.0
         ";
         let result = parse(msg);
-        assert_eq!(result.airspeed as u32, 65);
+        assert_eq!(result.airspeed.unwrap() as u32, 65);
     }
 
     #[test]
@@ -169,8 +162,26 @@ altitude=810.002
 
         let result = parse(msg);
 
-        assert_eq!(result.airspeed as u32, 58);
-        assert_eq!(result.time as u32, 12);
-        assert_eq!(result.altitude as u32, 810);
+        assert_eq!(result.airspeed.unwrap() as u32, 58);
+        assert_eq!(result.time.unwrap() as u32, 12);
+        assert_eq!(result.altitude.unwrap() as u32, 810);
+    }
+
+    #[test]
+    fn should_ignore_incomplete_fields() {
+        let msg = "airspeed=";
+
+        let result = parse(msg);
+
+        assert_eq!(result.airspeed, None);
+    }
+
+    #[test]
+    fn should_ignore_field_key_without_assignment() {
+        let msg = "airspeed";
+
+        let result = parse(msg);
+
+        assert_eq!(result.airspeed, None);
     }
 }

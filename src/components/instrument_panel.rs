@@ -1,3 +1,4 @@
+use std::sync::Arc;
 use std::time::Duration;
 
 use crate::components::instruments::accelerometer;
@@ -11,11 +12,10 @@ use crate::data::client::Client;
 use crate::utils::decimal_hours::into_time;
 use chrono::NaiveTime;
 use iocraft::prelude::*;
-use smol::Timer;
 
 #[component]
 pub fn InstrumentPanel(mut hooks: Hooks) -> impl Into<AnyElement<'static>> {
-    let client = hooks.use_context::<Client>();
+    let client = hooks.use_context::<Arc<Client>>();
     let mut system = hooks.use_context_mut::<SystemContext>();
     let mut should_exit = hooks.use_state(|| false);
     let mut airspeed = hooks.use_state(|| 0);
@@ -39,18 +39,37 @@ pub fn InstrumentPanel(mut hooks: Hooks) -> impl Into<AnyElement<'static>> {
     });
 
     // Read from data source
-    hooks.use_future(async move {
-        loop {
-            Timer::after(Duration::from_millis(500)).await;
+    hooks.use_future({
+        let c = client.clone();
 
-            let d = client.receive();
-            airspeed.set(d.airspeed as u32);
-            altitude.set(d.altitude as u32);
-            compass.set(d.compass as u32);
-            g_force.set(d.gforce);
-            slip.set(d.slipball);
-            vario.set(d.vario);
-            time.set(into_time(d.time));
+        async move {
+            loop {
+                smol::Timer::after(Duration::from_millis(500)).await;
+
+                let d = c.receive().await;
+
+                if let Some(air) = d.airspeed {
+                    airspeed.set(air as u32);
+                }
+                if let Some(alt) = d.altitude {
+                    altitude.set(alt as u32)
+                }
+                if let Some(c) = d.compass {
+                    compass.set(c as u32);
+                }
+                if let Some(g) = d.gforce {
+                    g_force.set(g);
+                }
+                if let Some(s) = d.slipball {
+                    slip.set(s);
+                }
+                if let Some(v) = d.vario {
+                    vario.set(v);
+                }
+                if let Some(t) = d.time {
+                    time.set(into_time(t));
+                }
+            }
         }
     });
 

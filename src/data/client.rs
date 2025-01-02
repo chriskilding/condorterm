@@ -1,3 +1,5 @@
+use async_trait::async_trait;
+
 /// Condor client
 pub struct Client {
     backend: Box<dyn Backend>,
@@ -10,44 +12,31 @@ impl Client {
         Self { backend: b }
     }
 
-    pub fn receive(&self) -> Datagram {
-        self.backend.receive()
+    pub async fn receive(&self) -> Datagram {
+        self.backend.receive().await
     }
 }
 
 /// Client backend strategy
+#[async_trait]
 pub trait Backend: Send + Sync {
-    fn receive(&self) -> Datagram;
+    async fn receive(&self) -> Datagram;
 }
 
 /// Condor's raw input
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Datagram {
-    pub airspeed: f32,
+    pub airspeed: Option<f32>,
     /// Altimeter reading (m or ft)
-    pub altitude: f32,
+    pub altitude: Option<f32>,
     /// Compass reading (degrees)
-    pub compass: f32,
+    pub compass: Option<f32>,
     /// g force factor
-    pub gforce: f32,
+    pub gforce: Option<f32>,
     /// Slip ball deflection angle (radians)
-    pub slipball: f32,
+    pub slipball: Option<f32>,
     /// In-game display time (decimal-hours)
-    pub time: f32,
+    pub time: Option<f32>,
     /// Pneumatic vario reading (m/s)
-    pub vario: f32,
-}
-
-impl Default for Datagram {
-    fn default() -> Self {
-        Self {
-            airspeed: 0.0,
-            altitude: 0.0,
-            compass: 0.0,
-            gforce: 1.0,
-            slipball: 0.0,
-            time: 0.0,
-            vario: 0.0,
-        }
-    }
+    pub vario: Option<f32>,
 }
