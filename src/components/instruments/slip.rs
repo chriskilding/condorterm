@@ -34,7 +34,7 @@ fn left_padding_width(value: Option<State<f32>>) -> u32 {
         Some(v) => {
             let rescaled_proportion = (v + 1.0) / 2.0;
             let bar = rescaled_proportion * total_width;
-            bar as u32
+            (bar - 1.0) as u32
         }
         None => 0,
     }

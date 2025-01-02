@@ -94,7 +94,7 @@ pub fn InstrumentPanel(mut hooks: Hooks) -> impl Into<AnyElement<'static>> {
                 Box(gap: Gap::Length(2)) {
                     Compass(value: compass, units: "deg")
                     TurnSlipIndicator(value: slip)
-                    accelerometer::Accelerometer(value: g_force, units: "G", scale: accelerometer::Scale::create(-4.0, 1.0, 6.5).unwrap(), inop: true)
+                    accelerometer::Accelerometer(value: g_force, units: "G", scale: accelerometer::Scale::create(accelerometer::Limits { min: -4.0, max: 6.5 }, 7).unwrap())
                 }
                 Box(gap: Gap::Length(2), justify_content: JustifyContent::Center) {
                     Clock(value: time, timezone: "UTC")

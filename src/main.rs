@@ -1,6 +1,5 @@
 use clap::Parser;
 use data::client::Client;
-use data::random::RandomBackend;
 use data::udp::UdpBackend;
 use iocraft::prelude::*;
 use smol::net::{IpAddr, SocketAddr, UdpSocket};
@@ -28,8 +27,7 @@ main! {
 
         let address = SocketAddr::from((host, port as u16));
         if let Ok(socket) = UdpSocket::bind(address).await {
-            let backend = RandomBackend {};
-//            let backend = UdpBackend::new(socket);
+            let backend = UdpBackend::new(socket);
             let client = Client::new(backend);
 
             let mut instrument_panel = element! {
