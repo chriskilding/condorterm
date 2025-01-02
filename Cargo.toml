@@ -9,10 +9,11 @@ publish = false
 [dependencies]
 iocraft = "0.5.2"
 smol = "2.0.2"
+smol-macros = "0.1.0"
 clap = { version = "4.5.23", features = ["derive"] }
-clap_derive = { version = "4.0.0-rc.1" }
 rand = "0.8.5"
 chrono = "0.4.39"
+async-trait = "0.1.83"
 
 [dev-dependencies]
 approx = "0.5.1"

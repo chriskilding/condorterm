@@ -1,14 +1,19 @@
 use clap::Parser;
+use data::client::Client;
+use data::udp::UdpBackend;
 use iocraft::prelude::*;
-use std::net::IpAddr;
+use smol::net::{IpAddr, SocketAddr, UdpSocket};
+use std::sync::Arc;
 mod components;
 mod data;
+mod utils;
 use components::instrument_panel::InstrumentPanel;
+use smol_macros::main;
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Program {
-    /// UDP host address [example: 127.0.0.1]
+    /// Host address [example: 127.0.0.1]
     host: IpAddr,
 
     /// UDP port
@@ -16,13 +21,22 @@ struct Program {
     port: u32,
 }
 
-fn main() {
-    let Program { host, port } = Program::parse();
+main! {
+    async fn main() {
+        let Program { host, port } = Program::parse();
 
-    let host_str = format!("{}", host);
-    let port_str = format!("{}", port);
+        let address = SocketAddr::from((host, port as u16));
+        if let Ok(socket) = UdpSocket::bind(address).await {
+            let backend = UdpBackend::new(socket);
+            let client = Client::new(backend);
 
-    let mut instrument_panel = element!(InstrumentPanel(host: host_str, port: port_str));
+            let mut instrument_panel = element! {
+                ContextProvider(value: Context::owned(Arc::new(client))) {
+                    InstrumentPanel()
+                }
+            };
 
-    smol::block_on(instrument_panel.fullscreen()).unwrap();
+            let _ = instrument_panel.fullscreen().await;
+        }
+    }
 }
