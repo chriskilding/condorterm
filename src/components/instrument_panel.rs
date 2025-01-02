@@ -87,7 +87,7 @@ pub fn InstrumentPanel(mut hooks: Hooks) -> impl Into<AnyElement<'static>> {
             }
             Box(flex_direction: FlexDirection::Column, gap: Gap::Length(1), padding: 1) {
                 Box(gap: Gap::Length(2)) {
-                    vario::Vario(value: vario, units: "kt", scale: 12 as u32, inop: true)
+                    vario::Vario(value: vario, units: "kt", scale: 12 as u32)
                     airspeed::AirSpeedIndicator(value: airspeed, units: "kt", scale: airspeed::Scale::create(84, 119, 125).unwrap())
                     Altimeter(value: altitude, units: "ft")
                 }
